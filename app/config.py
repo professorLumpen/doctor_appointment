@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     DLX_FOR_RETRIES: str
     RMQ_NOT_SOLVED: str
     TTL_FOR_RETRIES: int
+    ERROR_PROBABILITY: float
+    DEATH_LIMIT: int
 
     @property
     def db_url(self):
