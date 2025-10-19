@@ -27,7 +27,7 @@ class RetryConsumer(RabbitBase, RetryRabbitMixin):
                     async with message.process():
                         await callback_func(message)
                 except RabbitException as e:
-                    print("Message not acknowledged:", e)
+                    print(e)
 
 
 def extract_deaths_count(headers: dict[str, Any] | None) -> int:
@@ -72,6 +72,4 @@ async def process_data(
 
         return
 
-    print(f"message '{body_msg}' not acknowledged. death count: {death_count}. retrying")
-    raise RabbitException("process data error")
-
+    raise RabbitException(f"message '{body_msg}' not acknowledged. death count: {death_count}. retrying")
