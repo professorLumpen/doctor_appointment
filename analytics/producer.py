@@ -2,7 +2,6 @@ from aio_pika import Message, DeliveryMode
 
 from analytics.rabbit_base import RabbitBase
 from analytics.retry_rabbit import RetryRabbitMixin
-from app.config import settings
 
 
 class RetryProducer(RabbitBase, RetryRabbitMixin):
