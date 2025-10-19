@@ -9,4 +9,7 @@ async def start_consuming():
 
 
 if __name__ == "__main__":
-    asyncio.run(start_consuming())
+    try:
+        asyncio.run(start_consuming())
+    except KeyboardInterrupt:
+        print("consumer stopped")
