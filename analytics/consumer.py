@@ -25,7 +25,7 @@ class RetryConsumer(RabbitBase, RetryRabbitMixin):
             async for message in queue_iterator:
                 try:
                     async with message.process():
-                        await callback_func(message)
+                        await callback_func(self.channel, message)
                 except RabbitException as e:
                     print(e)
 

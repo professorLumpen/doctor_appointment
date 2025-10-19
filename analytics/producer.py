@@ -8,17 +8,16 @@ from app.config import settings
 class RetryProducer(RabbitBase, RetryRabbitMixin):
     async def publish_message(
             self,
-            message: bytes,
-            queue_name: str = settings.RMQ_FOR_RETRIES,
+            message: str,
     ):
-        await self.declare_retry_queues()
+        _, queue = await self.declare_retry_queues()
 
         message = Message(
-            body=message,
+            body=message.encode("utf-8"),
             delivery_mode=DeliveryMode.PERSISTENT,
         )
 
         await self.channel.default_exchange.publish(
             message=message,
-            routing_key=queue_name,
+            routing_key=queue.name,
         )

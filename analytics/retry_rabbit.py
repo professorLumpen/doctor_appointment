@@ -17,10 +17,11 @@ class RetryRabbitMixin:
             arguments: dict[str, Any] | None = None,
     ):
         exchange = await self.channel.declare_exchange(
-            name=exchange_name,
-            type=exchange_type,
-            durable=durable
-        )
+                name=exchange_name,
+                type=exchange_type,
+                durable=durable
+            )
+
         queue = await self.channel.declare_queue(
             name=queue_name,
             durable=durable,
@@ -31,7 +32,19 @@ class RetryRabbitMixin:
 
         return exchange, queue
 
+    async def declare_not_solved_queue(
+            self,
+            queue_name: str = settings.RMQ_NOT_SOLVED,
+            durable: bool = True,
+    ):
+        await self.channel.declare_queue(
+            name=queue_name,
+            durable=durable,
+        )
+
     async def declare_retry_queues(self):
+        await self.declare_not_solved_queue()
+
         main_exchange, main_queue = await self.declare_exchange_and_queue(
             queue_name=settings.RMQ_FOR_RETRIES,
             exchange_name=settings.RMX_FOR_RETRIES,
@@ -49,10 +62,6 @@ class RetryRabbitMixin:
                 "x-dead-letter-exchange": settings.RMX_FOR_RETRIES,
                 "x-dead-letter-queue": settings.RMQ_FOR_RETRIES,
             }
-        )
-
-        await self.declare_exchange_and_queue(
-            queue_name=settings.RMQ_NOT_SOLVED,
         )
 
         return main_exchange, main_queue
