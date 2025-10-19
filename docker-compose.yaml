@@ -8,8 +8,20 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - appointments_db:/var/lib/postgresql
+      - appointments_data:/var/lib/postgresql
     restart: always
 
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RMQ_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
-  appointments_db:
+  appointments_data:
+  rabbitmq_data:
